@@ -28,6 +28,7 @@ export default function Whiteboard() {
     // if () return;
     ctxRef.current?.beginPath(); //Creates new path, if this is removed old lines get conntected
     ctxRef.current?.moveTo(e.clientX, e.clientY);
+    //Github is amazing
     setIsDrawing(true);
   };
 
