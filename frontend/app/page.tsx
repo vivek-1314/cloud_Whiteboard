@@ -1,14 +1,17 @@
 'use client';
 
 import Canvas from '../components/canvas';
+import Panel from '../components/panel';
 
 export default function Whiteboard() {
   return (
-    <div className="h-screen w-screen bg-[#e3dbcc] flex items-center justify-center ">
+    <div className="h-screen w-screen bg-[#e3dbcc] flex items-center justify-center relative">
       {/* ONLY ONE SCROLL CONTAINER */}
       <div className="h-[95vh] w-[90vw] overflow-auto rounded-xl no-scrollbar">
         <Canvas />
       </div>
+
+      <Panel />
     </div>
   );
 }
