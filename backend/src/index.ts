@@ -110,7 +110,7 @@ io.on('connection', (socket) => {
     console.log(`stroke broadcasted to room ${data.roomId}`)
   })
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     console.log('user disconnected:', socket.id)
 
     const roomId = (socket as any).roomId
@@ -131,6 +131,8 @@ io.on('connection', (socket) => {
     // if room is empty clean it up from memory (Redis keeps the strokes)
     if (users.length === 0) {
       rooms.delete(roomId)
+      await redis.del(`room:${roomId}:strokes`)
+      
     } else {
       // tell remaining users the updated list
       io.to(roomId).emit('users-update', users.map((u) => ({
