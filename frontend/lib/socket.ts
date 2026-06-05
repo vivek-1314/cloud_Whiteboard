@@ -10,9 +10,7 @@ export function getSocket(): Socket {
 
     socket.on('connect_error', (err) => {
       console.log('connect error', err.message)
-      if ((err as any).context?.status === 429) {
         alert("Too many requests. Try again in a minute.")
-      }
     })
 
   }
