@@ -45,11 +45,9 @@ app.get('/', (req, res) => {
 })
 
 io.on('connection', (socket) => {
-  console.log('a user connected:', socket.id)
 
   socket.on('join-room', async (roomId, name: string, userId: string) => {
     socket.join(roomId)
-    console.log(`${socket.id} joined ${roomId}`)
 
     if (!rooms.has(roomId)) {
       rooms.set(roomId, [])
@@ -60,12 +58,10 @@ io.on('connection', (socket) => {
     
     const color_key = `room:${roomId}:user:${userId}:color`
     let color  = await redis.get(color_key) 
-    console.log('color key', color_key, 'color from redis', color)
 
     if(!color) {
       color = generateColor()
-      await redis.set(color_key, color, 'EX', ROOM_TTL_SECONDS)
-      console.log('saved color to redis:', color_key, color)  
+      await redis.set(color_key, color, 'EX', ROOM_TTL_SECONDS) 
     }
     
     users.push({
@@ -96,7 +92,6 @@ io.on('connection', (socket) => {
     if(raw.length > 0) {
       const history = raw.map((item) => JSON.parse(item))
       socket.emit('sync', history)
-      console.log(`sent sync history to ${socket.id} for room ${roomId}, ${history.length} strokes`)
     }
   })
 
@@ -117,11 +112,9 @@ io.on('connection', (socket) => {
 
     // broadcast to everyone else in the room
     socket.to(data.roomId).emit('stroke', data)
-    console.log(`stroke broadcasted to room ${data.roomId}`)
   })
 
   socket.on('disconnect', async () => {
-    console.log('user disconnected:', socket.id)
 
     const roomId = (socket as any).roomId
     const userId = (socket as any).userId
